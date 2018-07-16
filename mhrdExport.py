@@ -3,6 +3,10 @@
 import codecs
 import string
 import re
+from time import sleep
+
+print('MAKE SURE THE savestate FILE IS IN THE SAME DIRECTORY AS THIS EXECUTABLE, OTHERWISE IT WON\'T WORK')
+sleep(5)
 
 # Read file using utf8, and ignoring errors due to savestate encoding being uknown.
 file = codecs.open('savestate', 'r', encoding='utf-8', errors='ignore')
@@ -36,3 +40,5 @@ for gate in gates:
     # export gate[1] into gate[0].txt, then close the file.
     file.write(gate[1])
     file.close()
+
+print('EXTRACTION SUCCESSFUL.')
