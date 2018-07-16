@@ -2,22 +2,35 @@ import codecs
 import string
 import re
 
+# Read file using utf8, and ignoring errors due to savestate encoding being uknown.
 file = codecs.open('savestate', 'r', encoding='utf-8', errors='ignore')
 savestate = file.read()
 file.close()
 
+# Filter out extraneous characters
 printable = set(string.printable)
-savestate_cleaned = ''.join(filter(lambda x: x in printable, savestate))
+savestate_filtered = ''.join(filter(lambda x: x in printable, savestate))
 
-re.findall(ptn, savestate_cleaned)
-
+# Find name and code for each gate user has created
 ptn = re.compile('(?s)([A-Z0-9]*?)sq~pt.*?(Inputs:.*?Wires:.*?;)') # Misses RAM4W16B
-gates = re.findall(ptn, savestate_cleaned)
+output = re.findall(ptn, savestate_filtered)
 
-# for gate in gates:
+# ETL: Extract & Transform gate RAM4W16B, and Load into RAM4W16B.txt. Do this because the primary regex pattern misses the RAM4W16B gate, due to savestate data structure irregularity. 
+ptn = re.compile('(?s)(RAM4W16B)sr.*?(Inputs:.*?Wires:.*?;)') 
+
+# Append RAM4W16B to output
+output.append(re.findall(ptn, savestate_filtered)[0])
+
+# Transfer non-blank indicies from list(output) to list(gates)
+gates = []
+for idx, val in output:
+    if idx != '':
+        gates.append((idx, val))
+
+for gate in gates:
     # create file named gate[0].txt
-    # export gate[1] into gate[0].txt
-
-# ETL: Extract & Transform gate RAM4W16B, and Load into RAM4W16B.txt. Do this because the main pattern misses the RAM4W16B gate due to savestate data structure irregularity. 
-
-
+    file = open(gate[0] + '.txt', 'w')
+    
+    # export gate[1] into gate[0].txt, then close the file.
+    file.write(gate[1])
+    file.close()
