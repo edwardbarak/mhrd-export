@@ -7,7 +7,7 @@ Since there is no native way of exporting user created logic gates in [MHRD](htt
 > savestate file location:
 > 1. Steam > Right Click on MHRD > Properties
 > 2. Open MHRD's local folder
-> 3. The savestate file is located somewhere in here. I can't remember the exact path right now.
+> 3. The savestate file is located in: userdata\
 3. Copy the savestate file to where the the executable is
 4. Run the executable
 > The executable will generate a text file in the current directory for each logic gate.
